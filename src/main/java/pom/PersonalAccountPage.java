@@ -14,6 +14,8 @@ public class PersonalAccountPage {
     private final By userEmail = By.xpath(".//label[ text()='Логин' ]/parent::div/input");
     private final By userPassword = By.xpath(".//input[@type='password']");
     private final By infoText = By.xpath(".//nav[@class = 'Account_nav__Lgali']/p");
+    private final By constructorButton = By.xpath(".//p[text()= 'Конструктор']");
+    private final By logo = By.xpath(".//div[@class='AppHeader_header__logo__2D0X2']");
 
     public PersonalAccountPage(WebDriver driver){
         this.driver = driver;
@@ -59,5 +61,15 @@ public class PersonalAccountPage {
             return true;
         else
             return false;
+    }
+    public void clickConstructor(){
+        new WebDriverWait(driver, 5)
+                .until(ExpectedConditions.elementToBeClickable(constructorButton));
+        driver.findElement(constructorButton).click();
+    }
+    public void clickLogo(){
+        new WebDriverWait(driver, 5)
+                .until(ExpectedConditions.elementToBeClickable(logo));
+        driver.findElement(logo).click();
     }
 }

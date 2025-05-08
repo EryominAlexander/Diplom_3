@@ -2,10 +2,11 @@ package lib;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
+import org.openqa.selenium.WebElement;
 import pom.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.lang.model.element.Element;
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
@@ -17,6 +18,9 @@ public class Steps {
     private final String expectedInfoText = "В этом разделе вы можете изменить свои персональные данные";
     private final String expectedPassword = "*****";
     private final String expectedLoginPageName = "Вход";
+    private final String expectedTitleNameHomePage = "Соберите бургер";
+    private final  List<String> expectedIngredients = Arrays.asList("Булки", "Соусы", "Начинки");
+    private final  List<String> expectedConstructors= Arrays.asList("Перетяните булочку сюда (верх)", "Перетяните булочку сюда (низ)");
 
     @Step("Открытие страницы регистрации")
     public void openRegisterPage(RegisterPage registerPage){
@@ -140,5 +144,34 @@ public class Steps {
     @Step("Страница логина. Получение названия страницы")
     public void getPageNameLoginPage(LoginPage loginPage){
         assertEquals(expectedLoginPageName, loginPage.getPageName());
+    }
+    @Step("Страница личного кабинета. Нажатие на кнопку Конструктор")
+    public void clickConstructorAccount(PersonalAccountPage personalAccountPage){
+        personalAccountPage.clickConstructor();
+    }
+    @Step("Страница личного кабинета. Нажатие на Логотип")
+    public void clickLogoAccount(PersonalAccountPage personalAccountPage){
+        personalAccountPage.clickLogo();
+    }
+    @Step("Главная страница. Проверка названия страницы")
+    public void checkTitleNameHomePage(HomePage homePage){
+        assertEquals(expectedTitleNameHomePage, homePage.getTitleName());
+    }
+    @Step("Главная страница. Проверка списка игредиентов")
+    public void checkIngredientListHomePage(HomePage homePage){
+        List<String> ingredients = new ArrayList<>();
+        for (WebElement element : homePage.getIngredients()){
+            ingredients.add(element.getText());
+        }
+        assertEquals(expectedIngredients, ingredients);
+    }
+    @Step("Главная страница. Проверка списка конструкторов")
+    public void checkConstructorsListHomePage(HomePage homePage){
+        List<String> constructors = new ArrayList<>();
+
+        for (WebElement element : homePage.getConstructors()){
+            constructors.add(element.getText());
+        }
+        assertEquals(expectedConstructors, constructors);
     }
 }
