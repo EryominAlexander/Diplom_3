@@ -2,20 +2,21 @@ package lib;
 
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
-import pom.ForgotPasswordPage;
-import pom.HomePage;
-import pom.LoginPage;
-import pom.RegisterPage;
+import pom.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class Steps {
     private final String expectedErrorMessage = "Некорректный пароль";
     private final String expectedButtonName = "Оформить заказ";
+    private final String expectedInfoText = "В этом разделе вы можете изменить свои персональные данные";
+    private final String expectedPassword = "*****";
+    private final String expectedLoginPageName = "Вход";
 
     @Step("Открытие страницы регистрации")
     public void openRegisterPage(RegisterPage registerPage){
@@ -107,5 +108,37 @@ public class Steps {
     @Step("Страница восстановления пароля. Нажатие на кнопку Войти")
     public void clickLoginButtonForgotPasswordPagePage(ForgotPasswordPage forgotPasswordPage){
         forgotPasswordPage.clickLoginButton();
+    }
+    @Step("Страница личного кабинета. Проверка наличия кнопки Профиль")
+    public void profileButtonExists(PersonalAccountPage personalAccountPage){
+        assertTrue(personalAccountPage.checkProfileButton());
+    }
+    @Step("Страница личного кабинета. Проверка наличия кнопки История заказов")
+    public void historyButtonExists(PersonalAccountPage personalAccountPage){
+        assertTrue(personalAccountPage.checkHistoryButton());
+    }
+    @Step("Страница личного кабинета. Проверка наличия информационного текста")
+    public void infoTextExists(PersonalAccountPage personalAccountPage){
+        assertEquals(expectedInfoText, personalAccountPage.getInfoText());
+    }
+    @Step("Страница личного кабинета. Проверка отображения имени пользователя")
+    public void checkUserNameAccount(PersonalAccountPage personalAccountPage, String name){
+        assertEquals(name, personalAccountPage.getUserName());
+    }
+    @Step("Страница личного кабинета. Проверка отображения логина пользователя")
+    public void checkUserEmailAccount(PersonalAccountPage personalAccountPage, String email){
+        assertEquals(email.toLowerCase(), personalAccountPage.getUserEmail());
+    }
+    @Step("Страница личного кабинета. Проверка отображения пароля пользователя")
+    public void checkUserPasswordAccount(PersonalAccountPage personalAccountPage){
+        assertEquals(expectedPassword, personalAccountPage.getUserPassword());
+    }
+    @Step("Страница личного кабинета. Нажатие на кнопку Выход")
+    public void clickExitAccount(PersonalAccountPage personalAccountPage){
+        personalAccountPage.clickExit();
+    }
+    @Step("Страница логина. Получение названия страницы")
+    public void getPageNameLoginPage(LoginPage loginPage){
+        assertEquals(expectedLoginPageName, loginPage.getPageName());
     }
 }

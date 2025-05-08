@@ -5,10 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import pom.ForgotPasswordPage;
 import pom.HomePage;
 import pom.LoginPage;
-import pom.RegisterPage;
+import pom.PersonalAccountPage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,7 @@ import java.util.Random;
 
 import static io.restassured.RestAssured.given;
 
-public class UserLoginTest {
+public class PersonalAccountTest {
     private String testName;
     private String testEmail;
     private String testPassword;
@@ -32,27 +31,7 @@ public class UserLoginTest {
         testPassword = "testPassword" + random.nextInt(1000000);
     }
     @Test
-    public void loginFromRegisterPageTest(){
-        Steps steps = new Steps();
-        steps.postCreateUser(testName, testEmail, testPassword);
-
-        RegisterPage registerPage = new RegisterPage(driver);
-
-        steps.openRegisterPage(registerPage);
-        steps.clickToButtonLoginOnRegisterPage(registerPage);
-
-        LoginPage loginPage = new LoginPage(driver);
-
-        steps.interUserEmailLoginPage(loginPage, testEmail);
-        steps.interUserPasswordLoginPage(loginPage, testPassword);
-        steps.clickToButtonLoginLoginPage(loginPage);
-
-        HomePage homePage = new HomePage(driver);
-        steps.checkButtonNameHomePage(homePage);
-
-    }
-    @Test
-    public void loginFromHomePageButtonLoginToAccountTest(){
+    public void checkPersonalAccountTest(){
         Steps steps = new Steps();
         steps.postCreateUser(testName, testEmail, testPassword);
 
@@ -66,43 +45,37 @@ public class UserLoginTest {
         steps.interUserPasswordLoginPage(loginPage, testPassword);
         steps.clickToButtonLoginLoginPage(loginPage);
 
-        steps.checkButtonNameHomePage(homePage);
+        steps.clickToPersonalAccountHomePage(homePage);
+
+        PersonalAccountPage personalAccountPage = new PersonalAccountPage(driver);
+        steps.profileButtonExists(personalAccountPage);
+        steps.historyButtonExists(personalAccountPage);
+        steps.infoTextExists(personalAccountPage);
+        steps.checkUserNameAccount(personalAccountPage, testName);
+        steps.checkUserEmailAccount(personalAccountPage, testEmail);
+        steps.checkUserPasswordAccount(personalAccountPage);
     }
     @Test
-    public void loginFromHomePageButtonPersonalAccountTest(){
+    public void exitFromPersonalAccountTest(){
         Steps steps = new Steps();
         steps.postCreateUser(testName, testEmail, testPassword);
 
         HomePage homePage = new HomePage(driver);
         steps.openHomePage(homePage);
+        steps.clickToLoginToAccountHomePage(homePage);
+
+        LoginPage loginPage = new LoginPage(driver);
+
+        steps.interUserEmailLoginPage(loginPage, testEmail);
+        steps.interUserPasswordLoginPage(loginPage, testPassword);
+        steps.clickToButtonLoginLoginPage(loginPage);
+
         steps.clickToPersonalAccountHomePage(homePage);
 
-        LoginPage loginPage = new LoginPage(driver);
-
-        steps.interUserEmailLoginPage(loginPage, testEmail);
-        steps.interUserPasswordLoginPage(loginPage, testPassword);
-        steps.clickToButtonLoginLoginPage(loginPage);
-
-        steps.checkButtonNameHomePage(homePage);
-    }
-
-    @Test
-    public void loginFromForgotPasswordPageTest(){
-        Steps steps = new Steps();
-        steps.postCreateUser(testName, testEmail, testPassword);
-
-        ForgotPasswordPage forgotPasswordPage = new ForgotPasswordPage(driver);
-        steps.openForgotPasswordPagePage(forgotPasswordPage);
-        steps.clickLoginButtonForgotPasswordPagePage(forgotPasswordPage);
-
-        LoginPage loginPage = new LoginPage(driver);
-
-        steps.interUserEmailLoginPage(loginPage, testEmail);
-        steps.interUserPasswordLoginPage(loginPage, testPassword);
-        steps.clickToButtonLoginLoginPage(loginPage);
-
-        HomePage homePage = new HomePage(driver);
-        steps.checkButtonNameHomePage(homePage);
+        PersonalAccountPage personalAccountPage = new PersonalAccountPage(driver);
+        steps.profileButtonExists(personalAccountPage);
+        steps.clickExitAccount(personalAccountPage);
+        steps.getPageNameLoginPage(loginPage);
     }
     @After
     public void close(){
