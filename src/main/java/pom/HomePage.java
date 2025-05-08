@@ -5,8 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import javax.lang.model.element.Element;
 import java.util.List;
 
 public class HomePage {
@@ -17,6 +15,10 @@ public class HomePage {
     private By pageTitle = By.xpath(".//section[@class='BurgerIngredients_ingredients__1N8v2']/h1");
     private By ingredients = By.xpath(".//span[@class='text text_type_main-default']");
     private By constructors = By.xpath(".//span[@class='constructor-element__text']");
+    private By selectionOne = By.xpath(".//div[@style='display: flex;']/div[1]");
+    private By selectionTwo = By.xpath(".//div[@style='display: flex;']/div[2]");
+    private By selectionThree = By.xpath(".//div[@style='display: flex;']/div[3]");
+
     public HomePage (WebDriver driver){
         this.driver = driver;
     }
@@ -52,6 +54,22 @@ public class HomePage {
         new WebDriverWait(driver, 5).until(ExpectedConditions
                 .elementToBeClickable(constructors));
         return driver.findElements(constructors);
+    }
+
+    public WebElement getSelectionOne(){
+        new WebDriverWait(driver, 5)
+                .until(ExpectedConditions.elementToBeClickable(selectionOne));
+        return driver.findElement(selectionOne);
+    }
+    public WebElement getSelectionTwo(){
+        new WebDriverWait(driver, 5)
+                .until(ExpectedConditions.elementToBeClickable(selectionTwo));
+        return driver.findElement(selectionTwo);
+    }
+    public WebElement getSelectionThree(){
+        new WebDriverWait(driver, 5)
+                .until(ExpectedConditions.elementToBeClickable(selectionThree));
+        return driver.findElement(selectionThree);
     }
 
 }

@@ -3,14 +3,16 @@ package lib;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import pom.*;
 
 import javax.lang.model.element.Element;
 import java.util.*;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static java.lang.Thread.sleep;
+import static org.junit.Assert.*;
 
 public class Steps {
     private final String expectedErrorMessage = "Некорректный пароль";
@@ -21,6 +23,7 @@ public class Steps {
     private final String expectedTitleNameHomePage = "Соберите бургер";
     private final  List<String> expectedIngredients = Arrays.asList("Булки", "Соусы", "Начинки");
     private final  List<String> expectedConstructors= Arrays.asList("Перетяните булочку сюда (верх)", "Перетяните булочку сюда (низ)");
+    private final String selectedElement = "tab_tab_type_current__2BEPc";
 
     @Step("Открытие страницы регистрации")
     public void openRegisterPage(RegisterPage registerPage){
@@ -173,5 +176,26 @@ public class Steps {
             constructors.add(element.getText());
         }
         assertEquals(expectedConstructors, constructors);
+    }
+
+    @Step("Главная страница. Проверка переключения разделов")
+    public void checkSelectionsHomePage(HomePage homePage) {
+        WebElement bunSelection = homePage.getSelectionOne();
+        WebElement sauceSection = homePage.getSelectionTwo();
+        WebElement ingredients = homePage.getSelectionThree();
+
+        assertTrue( bunSelection.getAttribute("class").contains(selectedElement));
+        assertFalse(sauceSection.getAttribute("class").contains(selectedElement));
+        assertFalse(ingredients.getAttribute("class").contains(selectedElement));
+
+        sauceSection.click();
+        assertTrue( sauceSection.getAttribute("class").contains(selectedElement));
+        assertFalse( bunSelection.getAttribute("class").contains(selectedElement));
+        assertFalse( ingredients.getAttribute("class").contains(selectedElement));
+
+        ingredients.click();
+        assertTrue( ingredients.getAttribute("class").contains(selectedElement));
+        assertFalse( sauceSection.getAttribute("class").contains(selectedElement));
+        assertFalse( bunSelection.getAttribute("class").contains(selectedElement));
     }
 }

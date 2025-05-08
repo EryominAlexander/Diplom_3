@@ -23,15 +23,16 @@ public class HomePageTest {
 
 
     @Before
-    public void start(){
+    public void start() {
         driver = new ChromeDriver();
         Random random = new Random();
         testEmail = "testEmail" + random.nextInt(1000000) + "@yandex.ru";
         testName = "testName" + random.nextInt(1000000);
         testPassword = "testPassword" + random.nextInt(1000000);
     }
+
     @Test
-    public void clickToConstructorTest(){
+    public void clickToConstructorTest() {
         Steps steps = new Steps();
         steps.postCreateUser(testName, testEmail, testPassword);
 
@@ -55,8 +56,9 @@ public class HomePageTest {
         steps.checkIngredientListHomePage(homePage);
         steps.checkConstructorsListHomePage(homePage);
     }
+
     @Test
-    public void clickToLogoTest(){
+    public void clickToLogoTest() {
         Steps steps = new Steps();
         steps.postCreateUser(testName, testEmail, testPassword);
 
@@ -80,8 +82,32 @@ public class HomePageTest {
         steps.checkIngredientListHomePage(homePage);
         steps.checkConstructorsListHomePage(homePage);
     }
+
+    @Test
+    public void switchSectionTest() {
+        Steps steps = new Steps();
+        steps.postCreateUser(testName, testEmail, testPassword);
+
+        HomePage homePage = new HomePage(driver);
+        steps.openHomePage(homePage);
+        steps.clickToLoginToAccountHomePage(homePage);
+
+        LoginPage loginPage = new LoginPage(driver);
+
+        steps.interUserEmailLoginPage(loginPage, testEmail);
+        steps.interUserPasswordLoginPage(loginPage, testPassword);
+        steps.clickToButtonLoginLoginPage(loginPage);
+
+        steps.clickToPersonalAccountHomePage(homePage);
+
+        PersonalAccountPage personalAccountPage = new PersonalAccountPage(driver);
+        personalAccountPage.clickConstructor();
+
+        steps.checkSelectionsHomePage(homePage);
+    }
+
     @After
-    public void close(){
+    public void close() {
         driver.quit();
 
         Map<String, String> loginUserData = new HashMap<>();
