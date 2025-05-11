@@ -1,11 +1,18 @@
+import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 import lib.Steps;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import pom.RegisterPage;
-import java.util.Random;
+
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static driver.WebDriverCreator.createWebDriver;
 
 
 public class NegativeRegistrationTest {
@@ -16,10 +23,13 @@ public class NegativeRegistrationTest {
 
     @Before
     public void start(){
-        driver = new ChromeDriver();
-        Random random = new Random();
-        testEmail = "testEmail" + random.nextInt(1000000) + "@yandex.ru";
-        testName = "testName" + random.nextInt(1000000);
+        driver = createWebDriver();
+        Faker faker = new Faker();
+        FakeValuesService fakeValuesService = new FakeValuesService(
+                new Locale("en-GB"), new RandomService());
+        testEmail = fakeValuesService.bothify("????##@yandex.ru");
+        Matcher emailMatcher = Pattern.compile("\\w{8}\\d{3}@yandex.ru").matcher(testEmail);
+        testName = faker.name().firstName();
     }
     @Test
     public void registrationWithShortPasswordTest(){

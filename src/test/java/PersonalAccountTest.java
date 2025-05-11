@@ -1,18 +1,24 @@
+import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 import json.CreatedUserData;
 import lib.Steps;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import pom.HomePage;
 import pom.LoginPage;
 import pom.PersonalAccountPage;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import static driver.WebDriverCreator.createWebDriver;
 import static io.restassured.RestAssured.given;
 
 public class PersonalAccountTest {
@@ -24,10 +30,14 @@ public class PersonalAccountTest {
 
     @Before
     public void start(){
-        driver = new ChromeDriver();
+        driver = createWebDriver();
         Random random = new Random();
-        testEmail = "testEmail" + random.nextInt(1000000) + "@yandex.ru";
-        testName = "testName" + random.nextInt(1000000);
+        Faker faker = new Faker();
+        FakeValuesService fakeValuesService = new FakeValuesService(
+                new Locale("en-GB"), new RandomService());
+        testEmail = fakeValuesService.bothify("????##@yandex.ru");
+        Matcher emailMatcher = Pattern.compile("\\w{8}\\d{3}@yandex.ru").matcher(testEmail);
+        testName = faker.name().firstName();
         testPassword = "testPassword" + random.nextInt(1000000);
     }
     @Test
